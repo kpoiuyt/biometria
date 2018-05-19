@@ -25,68 +25,124 @@ public class KMM {
 
 
     public void start(){
-        for(int i=0;i<image.getWidth();i++)
-            for(int j=0;j<image.getHeight();j++)
-                if(table[i][j]==0)
-        table[i][j]=1;
+      table=do_mapy_bitowej(table);
+      table=kontury_i_katy(table);
+      table=pixele_z_234_sasiadami(table);
+      table=usuwanie_wedlog_tablicy(table);
+      update();
 
 
-        for(int i=0;i<10;i++) {
-
-            czyToKrawedz();
-
-
-            //usunSrodek();
-
-            maska();
-
-            delete4();
-
-
-        }
-
-        update();
     }
 
-    private void do_jedynek(){
+    private int[][] usuwanie_wedlog_tablicy(int[][] table){
         for(int i=0;i<image.getWidth();i++)
-            for(int j=0;j<image.getHeight();j++)
-                if(table[i][j]!=255)
-                    table[i][j]=1;
+            for(int j=0;j<image.getHeight();j++) {
+
+                int[][] tab3 = new int[3][3];
+
+                if(table[i][j]==4)
+                {
+                for (int w = i - 1; w < i + 2; w++)
+                    for (int h = j - 1; h < j + 2; h++) {
+
+                        if (w < 0 || w > image.getWidth() - 1)
+                            continue;
+                        if (h < 0 || h > image.getHeight() - 1)
+                            continue;
+
+
+                        tab3[w - i + 1][h - j + 1] = table[w][h];
+
+
+                    }
+
+                int sum = 0;
+
+                for (int w = 0; w < 3; w++)
+                    for (int h = 0; h < 3; h++) {
+                    /////maska
+                    }
+
+
+            }
+            }
+            return table;
     }
 
-    private void usunSrodek(){
-        for(int i=0;i<image.getWidth();i++)
-            for(int j=0;j<image.getHeight();j++)
-                if(table[i][j]==1)
-                    table[i][j]=255;
-    }
-
-    private void czyToKrawedz() throws ArrayIndexOutOfBoundsException{
+    private int[][] pixele_z_234_sasiadami(int [][] table){
         for(int i=0;i<image.getWidth();i++)
             for(int j=0;j<image.getHeight();j++){
-            if(table[i][j]==1){
-                int count=0;
-                for(int w=i-1;w<i+2;w++)
-                    for(int h=j-1;h<j+2;h++){
+
+            int sum=0;
+
+                if(table[i][j]!=0)
+            for(int w=i-1;w<i+2;w++)
+                for(int h=j-1;h<j+2;h++){
+
 
                     if(w<0||w>image.getWidth()-1)
                         continue;
                     if(h<0||h>image.getHeight()-1)
                         continue;
 
-                    if(table[w][h]==255&&table[w][h]!=3&&i!=w&&h!=j){
-                        count++;
+                    if(w!=i&&h!=j){
+                        if(table[w][h]!=0)
+                            sum++;
                     }
 
-                    }
-                if(count>1)
-                    table[i][j]=2;
-                    if(count==1)
-                        table[i][j]=3;
+
+                }
+
+                if(sum==2||sum==3||sum==4)
+                    table[i][j]=4;
+
             }
-            }
+
+            return table;
     }
+
+    private int[][] kontury_i_katy(int[][] table){
+        for(int i=0;i<image.getWidth();i++)
+            for(int j=0;j<image.getHeight();j++){
+
+            int sum=0;
+
+            if(table[i][j]!=0)
+            for(int w=i-1;w<i+2;w++)
+                for(int h=j-1;h<j+2;h++){
+                if(w<0||w>image.getWidth()-1)
+                    continue;
+                if(h<0||h>image.getHeight()-1)
+                    continue;
+
+                if(w!=i&&h!=j){
+                    if(table[w][h]==0)
+                        sum+=1;
+                }
+
+                }
+
+                if(sum==1)
+                    table[i][j]=3;
+                if(sum>1)
+                    table[i][j]=2;
+
+            }
+
+            return table;
+    }
+
+
+    private int[][] do_mapy_bitowej(int [][] table){
+        for(int i=0;i<image.getWidth();i++)
+            for(int j=0;j<image.getHeight();j++)
+                if(table[i][j]==0)
+                    table[i][j]=1;
+                else table[i][j]=0;
+
+                return table;
+    }
+
 
 
     private void maska() throws ArrayIndexOutOfBoundsException{
@@ -170,13 +226,19 @@ public class KMM {
 
     public void update(){
         for(int i=0;i<image.getWidth();i++)
-            for(int j=0;j<image.getHeight();j++)
-                    image.setRGB(i,j,new Color(table[i][j],table[i][j],table[i][j]).getRGB());
+            for(int j=0;j<image.getHeight();j++) {
+                if(table[i][j]!=0)
+                image.setRGB(i, j, new Color(table[i][j], table[i][j], table[i][j]).getRGB());
+                else
+                    image.setRGB(i,j,Color.WHITE.getRGB());
 
-        for(int i=0;i<image.getWidth();i++)
-            for(int j=0;j<image.getHeight();j++)
-                if(table[i][j]==4)
-                    System.out.print(table[i][j]);
+
+                if(table[i][j]==4) System.out.print("4");
+
+            }
+
+
+
 
     }
 
