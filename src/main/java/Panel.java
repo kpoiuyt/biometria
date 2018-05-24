@@ -11,11 +11,14 @@ public class Panel {
     private JButton pokażButton;
     private JPanel panel;
     private JButton scienianieButton;
+    private JButton CNButton;
 
     private BufferedImage image;
 
     private JFrame frame;
     private Binaryzacja binaryzacja;
+    private KMM2 kmm;
+    private CN cn;
 
 
     public Panel(){
@@ -29,12 +32,20 @@ public class Panel {
         pokażButton.addActionListener(getPokażButtonListener());
 
         scienianieButton.addActionListener(getScienianieButtonListener());
-
+        CNButton.addActionListener(getCNListener());
 
         frame.setVisible(true);
     }
 
-
+    private ActionListener getCNListener(){
+        return new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cn=new CN(image);
+                cn.start();
+                image=cn.getImage();
+            }
+        };
+    }
 
     private ActionListener getScienianieButtonListener(){
         return new ActionListener() {
@@ -43,9 +54,11 @@ public class Panel {
                 binaryzacja.binaryzacja_otsu();
                 image=binaryzacja.getImage();
 
-               // CN cn=new CN(image);
-              //  cn.start();
-               // image=cn.getImage();
+                kmm=new KMM2(image);
+                kmm.start();
+                image=kmm.getImage();
+
+
             }
         };
     }
