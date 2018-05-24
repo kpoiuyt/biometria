@@ -35,6 +35,13 @@ public class KMM {
     }
 
     private int[][] usuwanie_wedlog_tablicy(int[][] table){
+
+        int[][] x=new int[image.getWidth()][image.getHeight()];
+
+        for(int i=0;i<image.getWidth();i++)
+            for(int j=0;j<image.getHeight();j++)
+                x[i][j]=table[i][j];
+
         for(int i=0;i<image.getWidth();i++)
             for(int j=0;j<image.getHeight();j++) {
 
@@ -58,45 +65,85 @@ public class KMM {
 
                 int sum = 0;
 
-                for (int w = 0; w < 3; w++)
-                    for (int h = 0; h < 3; h++) {
-                    /////maska
+               // for (int w = 0; w < 3; w++)
+                 //   for (int h = 0; h < 3; h++) {
+
+                        if(tab3[0][0]!=0) sum+=128;
+                        if(tab3[0][1]!=0) sum+=1;
+                        if(tab3[0][2]!=0) sum+=2;
+                        if(tab3[1][0]!=0) sum+=64;
+                        if(tab3[2][0]!=0) sum+=32;
+                        if(tab3[2][1]!=0) sum+=16;
+                        if(tab3[2][2]!=0) sum+=8;
+                        if(tab3[1][2]!=0) sum+=4;
+
+                   // }
+
+                    //System.out.println(sum);
+
+                    int[] tab=to_remove();
+
+                for(int t=0;t<tab.length;t++)
+                    if(sum==tab[t]) {
+                    System.out.println("removing:"+x[i][j]);
+                        //x[i][j] = 0;
                     }
 
+                sum=0;
+
 
             }
             }
+
+            for(int i=0;i<image.getWidth();i++)
+                for(int j=0;j<image.getHeight();j++)
+                    table[i][j]=x[i][j];
+
             return table;
     }
 
     private int[][] pixele_z_234_sasiadami(int [][] table){
+
+        int[][]x=new int[image.getWidth()][image.getHeight()];
+
         for(int i=0;i<image.getWidth();i++)
-            for(int j=0;j<image.getHeight();j++){
-
-            int sum=0;
-
-                if(table[i][j]!=0)
-            for(int w=i-1;w<i+2;w++)
-                for(int h=j-1;h<j+2;h++){
+            for(int j=0;j<image.getHeight();j++)
+                x[i][j]=table[i][j];
 
 
-                    if(w<0||w>image.getWidth()-1)
-                        continue;
-                    if(h<0||h>image.getHeight()-1)
-                        continue;
+        for(int i=0;i<image.getWidth();i++)
+            for(int j=0;j<image.getHeight();j++) {
 
-                    if(w!=i&&h!=j){
-                        if(table[w][h]!=0)
-                            sum++;
-                    }
+                int sum = 0;
 
+                if (table[i][j] != 0) {
+                    for (int w = i - 1; w < i + 2; w++)
+                        for (int h = j - 1; h < j + 2; h++) {
+
+
+                            if (w < 0 || w > image.getWidth() - 1)
+                                continue;
+                            if (h < 0 || h > image.getHeight() - 1)
+                                continue;
+
+                            if (w != i && h != j) {
+                                if (table[w][h] != 0)
+                                    sum++;
+                            }
+
+
+                        }
+
+                    if (sum == 2 || sum == 3 || sum == 4)
+                        x[i][j] = 4;
 
                 }
-
-                if(sum==2||sum==3||sum==4)
-                    table[i][j]=4;
-
             }
+
+        for(int i=0;i<image.getWidth();i++)
+            for(int j=0;j<image.getHeight();j++)
+                table[i][j]=x[i][j];
+
 
             return table;
     }
@@ -227,13 +274,13 @@ public class KMM {
     public void update(){
         for(int i=0;i<image.getWidth();i++)
             for(int j=0;j<image.getHeight();j++) {
-                if(table[i][j]!=0)
+                if(table[i][j]!=4)
                 image.setRGB(i, j, new Color(table[i][j], table[i][j], table[i][j]).getRGB());
                 else
                     image.setRGB(i,j,Color.WHITE.getRGB());
 
 
-                if(table[i][j]==4) System.out.print("4");
+               // if(table[i][j]==4) System.out.print("4");
 
             }
 

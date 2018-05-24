@@ -41,13 +41,11 @@ public class Panel {
             public void actionPerformed(ActionEvent e) {
                 binaryzacja.setImage(image);
                 binaryzacja.binaryzacja_otsu();
-                KMM scienianie=new KMM(binaryzacja.getImage());
-                scienianie.start();
-                image=scienianie.getImage();
+                image=binaryzacja.getImage();
 
-                CN cn=new CN(image);
-                cn.start();
-                image=cn.getImage();
+               // CN cn=new CN(image);
+              //  cn.start();
+               // image=cn.getImage();
             }
         };
     }
